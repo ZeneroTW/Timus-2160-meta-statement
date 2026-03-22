@@ -3,6 +3,7 @@ class Node: #Класс узла
         self.value = value
         self.left = None
         self.right = None
+        self.size_val = 1
 
     def print_tree(self):
         print(self.value)
@@ -55,22 +56,50 @@ class Stack: #Класс Стэка
         else:
             return None
 
+class CartesianTree:
+    def __init__(self, arr):
+        self.arr = arr
+        self.comb = Combinatorics(len(arr))
+    def build(self):
+        stk = Stack()
+        for x in self.arr:
+            node = Node(x)
+            last = None
+            while stk.is_empty() == False and stk.top().value > x:
+                last = stk.pop()
+            node.left = last
+            if stk.is_empty() == False:
+                stk.top().right = node
+            stk.push(node)
+        return stk.body[0]
+    
+    def count(self, root):
+        stack = [root]
+        order = []
+        while stack:
+            node = stack.pop()
+            if node:
+                order.append(node)
+                stack.append(node.left)
+                stack.append(node.right)
 
+        for node in reversed(order):
+            L = node.left.size_val if node.left else 0
+            R = node.right.size_val if node.right else 0
+            node.size_val = 1 + L + R
+            
+        result = 1
+        for node in order:
+            L = node.left.size_val if node.left else 0
+            R = node.right.size_val if node.right else 0
+            result *= self.comb.C(L+R, L)
+        return result
 
-arr = [3, 1, 2]
-stk = Stack()
+import sys
+sys.setrecursionlimit(200000)
 
-# Декартово дерево 
-for x in arr:
-    node = Node(x)
-    last = None
-    while stk.is_empty() == False and stk.top().value > x:
-        last = stk.pop()
-    node.left = last
-    if stk.is_empty() == False:
-        stk.top().right = node
-    stk.push(node)
-root = stk.body[0]
-root.print_tree()
-
-
+N = int(input())        
+arr = list(map(int, input().split()))
+ct = CartesianTree(arr)
+root = ct.build()
+print(ct.count(root)%(10**9 + 7))

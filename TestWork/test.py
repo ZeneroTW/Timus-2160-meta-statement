@@ -1,5 +1,4 @@
-a = [1, 2, None,  4, None]
-
-y = sum([x for x in a if x != None])
-
-print(y)
+a = [1, 3, 2, 4]
+for x in a:
+    print(a)
+    print(x)
