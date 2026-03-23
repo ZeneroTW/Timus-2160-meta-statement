@@ -1,20 +1,13 @@
 MOD = 10**9 + 7
 
-class Node: #Класс узла
+class Node: #Класс Узла
     def __init__(self, value):
         self.value = value
         self.left = None
         self.right = None
         self.size_val = 1
 
-    def print_tree(self):
-        print(self.value)
-        if self.left != None:
-            self.left.print_tree()
-        if self.right != None:
-            self.right.print_tree()
-
-class Combinatorics:
+class Combinatorics: #Класс Комбинаторики
     def __init__(self, n):
         self.n = n
         self.fac = [1] * (n + 1)
@@ -25,7 +18,7 @@ class Combinatorics:
         for i in range(n, 0, -1):
             self.invfac[i-1] = self.invfac[i] * i % MOD
 
-    def C(self, n, k):
+    def C(self, n, k): #Формула Сочетаний
         if k < 0 or k > n:
             return 0
         return self.fac[n] * self.invfac[k] % MOD * self.invfac[n-k] % MOD
@@ -54,7 +47,7 @@ class Stack: #Класс Стэка
         else:
             return None
 
-class CartesianTree:
+class CartesianTree: #Декартово Дерево 
     def __init__(self, arr):
         self.arr = arr
         self.comb = Combinatorics(len(arr))
