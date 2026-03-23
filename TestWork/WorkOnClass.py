@@ -1,3 +1,5 @@
+MOD = 10**9 + 7
+
 class Node: #Класс узла
     def __init__(self, value):
         self.value = value
@@ -12,24 +14,21 @@ class Node: #Класс узла
         if self.right != None:
             self.right.print_tree()
 
-    def size(self):
-        left_size = self.left.size() if self.left != None else 0
-        right_size = self.right.size() if self.right != None else 0
-        counter = 1 + left_size + right_size
-        return counter
-
-class Combinatorics: #Класс Комбинаторики
-    def __init__(self, N):
-        self.N = N
-        self.fac = list(range(self.N+1))
-        self.fac[0] = 1
-        for i in range(1, N+1):
-            self.fac[i] *= int(self.fac[i-1])
+class Combinatorics:
+    def __init__(self, n):
+        self.n = n
+        self.fac = [1] * (n + 1)
+        self.invfac = [1] * (n + 1)
+        for i in range(1, n + 1):
+            self.fac[i] = self.fac[i-1] * i % MOD
+        self.invfac[n] = pow(self.fac[n], MOD - 2, MOD)
+        for i in range(n, 0, -1):
+            self.invfac[i-1] = self.invfac[i] * i % MOD
 
     def C(self, n, k):
-        self.n = n
-        self.k = k
-        return (self.fac[n])//((self.fac[n-k])*(self.fac[k]))
+        if k < 0 or k > n:
+            return 0
+        return self.fac[n] * self.invfac[k] % MOD * self.invfac[n-k] % MOD
 
 class Stack: #Класс Стэка
     def __init__(self):
@@ -43,7 +42,6 @@ class Stack: #Класс Стэка
         self.body = self.body[:-1]
         return top
         
-
     def is_empty(self):
         if self.body == []:
             return True
@@ -60,6 +58,7 @@ class CartesianTree:
     def __init__(self, arr):
         self.arr = arr
         self.comb = Combinatorics(len(arr))
+
     def build(self):
         stk = Stack()
         for x in self.arr:
@@ -76,6 +75,8 @@ class CartesianTree:
     def count(self, root):
         stack = [root]
         order = []
+        result = 1
+
         while stack:
             node = stack.pop()
             if node:
@@ -88,18 +89,20 @@ class CartesianTree:
             R = node.right.size_val if node.right else 0
             node.size_val = 1 + L + R
             
-        result = 1
+
         for node in order:
             L = node.left.size_val if node.left else 0
             R = node.right.size_val if node.right else 0
             result *= self.comb.C(L+R, L)
         return result
 
-import sys
-sys.setrecursionlimit(200000)
+# N = int(input())        
+# arr = list(map(int, input().split()))
+# ct = CartesianTree(arr)
+# root = ct.build()
+# print(ct.count(root)%(10**9 + 7))
 
-N = int(input())        
-arr = list(map(int, input().split()))
+arr = [3, 1, 4, 2]
 ct = CartesianTree(arr)
 root = ct.build()
-print(ct.count(root)%(10**9 + 7))
+root.print_tree()
