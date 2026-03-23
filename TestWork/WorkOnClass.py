@@ -96,13 +96,8 @@ class CartesianTree:
             result *= self.comb.C(L+R, L)
         return result
 
-# N = int(input())        
-# arr = list(map(int, input().split()))
-# ct = CartesianTree(arr)
-# root = ct.build()
-# print(ct.count(root)%(10**9 + 7))
-
-arr = [3, 1, 4, 2]
+N = int(input())        
+arr = list(map(int, input().split()))
 ct = CartesianTree(arr)
 root = ct.build()
-root.print_tree()
+print(ct.count(root)%(10**9 + 7))
